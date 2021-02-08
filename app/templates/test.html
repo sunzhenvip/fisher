@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {{ super() }}
+    <br/>
+    {% if data.age < 18 %}
+        {{ data.name }}
+    {% elif data.age == 18 %}
+        {{ data.age | default('没有名称') }}
+    {% else %}
+        {{ data.age }}
+    {% endif %}
+{% endblock %}
