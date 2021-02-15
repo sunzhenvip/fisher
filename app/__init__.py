@@ -18,6 +18,8 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = 'web.login'
+    login_manager.login_message = '请先登陆或注册'
 
     # db.create_all(app=app)
     with app.app_context():

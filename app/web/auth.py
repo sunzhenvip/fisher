@@ -8,6 +8,7 @@ from ..forms.auth import RegisterForm, LoginForm
 from ..models.base import db
 from ..models.user import User
 from werkzeug.security import generate_password_hash
+from flask_login import login_user
 
 
 @web.route('/register', methods=['GET', 'POST'])
@@ -29,8 +30,13 @@ def login():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and user.check_password(form.passwd.data):
-            pass
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=True)
+            next = request.args.get('next')
+            # print(next)
+            if not next or not next.startswith('/'):
+                next = url_for('web.index')
+            return redirect(next)
         else:
             flash('账号不存在或密码错误')
     return render_template('auth/login.html', form={'data': {}})
