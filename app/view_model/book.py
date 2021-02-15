@@ -15,6 +15,8 @@ class BookViewModel:
         self.summary = yushu_book['summary']
         self.isbn = yushu_book['isbn']
         self.pages = yushu_book['pages']
+        self.pubdate = yushu_book['pubdate']
+        self.binding = yushu_book['binding']
 
     # 访问可以不需要加方法名称 例如 对象.intro
     @property
