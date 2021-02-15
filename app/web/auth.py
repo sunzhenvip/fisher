@@ -2,9 +2,9 @@ from . import web
 
 __author__ = 'sz'
 
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for, flash
 
-from ..forms.auth import RegisterForm
+from ..forms.auth import RegisterForm, LoginForm
 from ..models.base import db
 from ..models.user import User
 from werkzeug.security import generate_password_hash
@@ -20,12 +20,20 @@ def register():
         user.set_attrs(form.data)
         db.session.add(user)
         db.session.commit()
-        pass
+        return redirect(url_for('web.login'))
     return render_template('auth/register.html', form=form)
 
 
 @web.route('/login', methods=['GET', 'POST'])
 def login():
+    form = LoginForm(request.form)
+    if request.method == 'POST' and form.validate():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.check_password(form.passwd.data):
+            pass
+        else:
+            flash('账号不存在或密码错误')
+    return render_template('auth/login.html', form={'data': {}})
     pass
 
 

@@ -10,6 +10,7 @@ requests = "*"
 wtforms = "==2.2.1"
 flask-sqlalchemy = "==2.3.2"
 cymysql = "*"
+flask-login = "==0.4.1"
 
 [dev-packages]
 
