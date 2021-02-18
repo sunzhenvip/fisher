@@ -3,6 +3,7 @@
 """
 __author__ = 'sz'
 
+import json
 from collections import namedtuple
 
 from app.view_model.book import BookViewModel
@@ -10,7 +11,7 @@ from app.view_model.book import BookViewModel
 MyGift = namedtuple('MyGift', ['id', 'book', 'wishes_count'])
 
 
-class MyGifts:
+class MyWishes:
     def __init__(self, gifts_of_mine, wish_count_list):
         self.gifts = []
         self.__gifts_of_mine = gifts_of_mine
@@ -30,14 +31,14 @@ class MyGifts:
         for wish_count in self.__wish_count_list:
             if gift.isbn == wish_count['isbn']:
                 count = wish_count['count']
-
         # print(gift.book)
-        r = {
-            'wishes_count': count,
-            'book': BookViewModel(gift.book),
-            'id': gift.id
-        }
-        return r
+        # print(gift.isbn)
+        # r = {
+        #     'wishes_count': count,
+        #     'book': BookViewModel(gift.book),
+        #     'id': gift.id
+        # }
+        return []
         # 下面代码有问题
         # MyGift(id=gift.id, book=BookViewModel(gift.book), wishes_count=count)
         # return my_gift.__reduce__()

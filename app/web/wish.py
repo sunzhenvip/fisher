@@ -5,12 +5,25 @@ __author__ = '七月'
 from flask_login import login_required, current_user
 from ..models.base import db
 from app.models.wish import Wish
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, render_template
+
+from ..view_model.wish import MyWishes
 
 
 @web.route('/my/wish')
 def my_wish():
-    pass
+    uid = current_user.id
+    wishes_of_mine = Wish.get_user_wishes(uid)
+
+    isbn_list = [wish.isbn for wish in wishes_of_mine]
+
+    print(isbn_list)
+
+    gift_count_list = Wish.get_gifts_counts(isbn_list)
+
+    view_model = MyWishes(wishes_of_mine, gift_count_list)
+
+    return render_template('my_wish.html', wishes=[])
 
 
 @web.route('/wish/book/<isbn>')

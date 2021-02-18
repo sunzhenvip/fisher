@@ -9,7 +9,6 @@ from app.models.base import Base, db
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, SmallInteger, desc, func
 from sqlalchemy.orm import relationship
 from collections import namedtuple
-from app.models.wish import Wish
 from app.spider.yushu_book import YuShuBook
 
 EachGiftWishCount = namedtuple('EachGiftWishCount', ['count', 'isbn'])
@@ -33,15 +32,13 @@ class Gift(Base):
 
     @classmethod
     def get_wish_counts(cls, isbn_list):
+        from app.models.wish import Wish
         # 根据传入的一组isbn，到gift 表中检索出相应的礼物 并且计算出某个礼物
         count_list = db.session.query(func.count(Wish.id), Wish.isbn).filter(
             Wish.launched == False,
             Wish.isbn.in_(isbn_list),
             Wish.status == 1).group_by(
             Wish.isbn).all()
-
-
-
         # 对象 | 字典
         count_list = [{'count': w[0], 'isbn': w[1]} for w in count_list]
         return count_list
