@@ -21,7 +21,6 @@ class MyWishes:
     def __parse(self):
         temp_gifts = []
         for gift in self.__gifts_of_mine:
-            print(gift.book)
             my_gift = self.__matching(gift)
             temp_gifts.append(my_gift)
         return temp_gifts
