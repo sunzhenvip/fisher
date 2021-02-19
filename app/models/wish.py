@@ -3,10 +3,12 @@
 """
 __author__ = 'sz'
 
+from app.models.gift import Gift
 from app.spider.yushu_book import YuShuBook
 from sqlalchemy import Column, String, Integer, ForeignKey, Boolean, desc, func
 from sqlalchemy.orm import relationship
 from app.models.base import Base, db
+from app.view_model.book import BookViewModel
 
 
 class Wish(Base):
@@ -25,14 +27,12 @@ class Wish(Base):
     def book(self):
         yushu_book = YuShuBook()
         yushu_book.search_by_isbn(self.isbn)
-        return yushu_book
+        return yushu_book.first
 
     @classmethod
     def get_user_wishes(cls, uid):
         wishes = Wish.query.filter_by(uid=uid, launched=False).order_by(
             desc(Wish.create_time)).all()
-
-        print(wishes[0].book)
         return wishes
 
     @classmethod

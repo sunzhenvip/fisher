@@ -3,7 +3,6 @@
 """
 __author__ = 'sz'
 
-import json
 from collections import namedtuple
 
 from app.view_model.book import BookViewModel
@@ -22,6 +21,7 @@ class MyWishes:
     def __parse(self):
         temp_gifts = []
         for gift in self.__gifts_of_mine:
+            print(gift.book)
             my_gift = self.__matching(gift)
             temp_gifts.append(my_gift)
         return temp_gifts
@@ -33,12 +33,12 @@ class MyWishes:
                 count = wish_count['count']
         # print(gift.book)
         # print(gift.isbn)
-        # r = {
-        #     'wishes_count': count,
-        #     'book': BookViewModel(gift.book),
-        #     'id': gift.id
-        # }
-        return []
+        r = {
+            'wishes_count': count,
+            'book': BookViewModel(gift.book),
+            'id': gift.id
+        }
+        return r
         # 下面代码有问题
         # MyGift(id=gift.id, book=BookViewModel(gift.book), wishes_count=count)
         # return my_gift.__reduce__()
