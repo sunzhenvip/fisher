@@ -3,11 +3,15 @@
 """
 __author__ = 'sz'
 
-from app.models.base import Base
+from flask import current_app
+
+from app.models.base import Base, db
 from sqlalchemy import Column, Integer, String, Boolean, Float
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+
 from flask_login import UserMixin
 from app import login_manager
 from app.libs.helper import is_isbn_or_key
@@ -58,6 +62,22 @@ class User(UserMixin, Base):
     def password(self, row):
         self._password = generate_password_hash(row)
 
+    def generate_token(self, expiration=600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def reset_password(token, new_password):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return False
+        uid = data.get('id')
+        with db.auto_commit():
+            user = User.query.get(uid)
+            user.password = new_password
+        return True
     # 继承UserMixin有用get_id方法
     # def get_id(self):
     # return self.id

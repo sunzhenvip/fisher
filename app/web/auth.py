@@ -4,7 +4,7 @@ __author__ = 'sz'
 
 from flask import render_template, request, redirect, url_for, flash, request
 
-from ..forms.auth import RegisterForm, LoginForm, EmailForm
+from ..forms.auth import RegisterForm, LoginForm, EmailForm, ResetPasswordForm
 from ..models.base import db
 from ..models.user import User
 from werkzeug.security import generate_password_hash
@@ -55,7 +55,11 @@ def forget_password_request():
             except Exception as e:
                 return render_template('404.html')
             from app.libs.email import send_mail
-            send_mail(form.email.data, '重置密码', 'email/reset_password.html', user=user, token='231234454')
+            send_mail(form.email.data, '重置密码',
+                      'email/reset_password.html',
+                      user=user,
+                      token=user.generate_token())
+            flash('一封邮件已发送到邮箱' + account_email + '，请及时查收')
 
     return render_template('auth/forget_password_request.html', form=form)
     pass
@@ -63,6 +67,16 @@ def forget_password_request():
 
 @web.route('/reset/password/<token>', methods=['GET', 'POST'])
 def forget_password(token):
+    form = ResetPasswordForm(request.form)
+    if request.method == 'POST' and form.validate():
+        success = User.reset_password(token, form.password1.data)
+        if success:
+            flash('你的密码已更新,请使用新密码登陆')
+            return redirect(url_for('web.login'))
+        else:
+            flash('密码重置失败')
+
+    return render_template('auth/forget_password.html', form=form)
     pass
 
 
