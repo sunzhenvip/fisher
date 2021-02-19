@@ -7,6 +7,7 @@ from ..models.base import db
 from app.models.wish import Wish
 from flask import render_template, flash, redirect, url_for, request, render_template
 
+from ..view_model.trade import MyTrades
 from ..view_model.wish import MyWishes
 
 
@@ -19,9 +20,9 @@ def my_wish():
 
     gift_count_list = Wish.get_gifts_counts(isbn_list)
 
-    view_model = MyWishes(wishes_of_mine, gift_count_list)
+    view_model = MyTrades(wishes_of_mine, gift_count_list)
     # print(view_model.gifts)
-    return render_template('my_wish.html', wishes=view_model.gifts)
+    return render_template('my_wish.html', wishes=view_model.trades)
 
 
 @web.route('/wish/book/<isbn>')
