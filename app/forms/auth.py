@@ -30,3 +30,7 @@ class LoginForm(Form):
     email = StringField(validators=[DataRequired(), Length(5, 64), Email(message='电子邮箱不符合规范')])
 
     password = PasswordField(validators=[DataRequired(message='密码不能为空,请输入密码'), Length(6, 32)])
+
+
+class EmailForm(Form):
+    email = StringField(validators=[DataRequired(), Length(8, 64), Email(message='电子邮箱不符合规则')])

@@ -2,13 +2,13 @@ from . import web
 
 __author__ = 'sz'
 
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, request
 
-from ..forms.auth import RegisterForm, LoginForm
+from ..forms.auth import RegisterForm, LoginForm, EmailForm
 from ..models.base import db
 from ..models.user import User
 from werkzeug.security import generate_password_hash
-from flask_login import login_user,logout_user
+from flask_login import login_user, logout_user
 
 
 @web.route('/register', methods=['GET', 'POST'])
@@ -46,6 +46,16 @@ def login():
 
 @web.route('/reset/password', methods=['GET', 'POST'])
 def forget_password_request():
+    form = EmailForm(request.form)
+    if request.method == 'POST':
+        if form.validate():
+            account_email = form.email.data
+            try:
+                user = User.query.filter_by(email=account_email).first_or_404()
+            except Exception as e:
+                return render_template('404.html')
+            pass
+    return render_template('auth/forget_password_request.html', form=form)
     pass
 
 
