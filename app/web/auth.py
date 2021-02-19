@@ -54,7 +54,9 @@ def forget_password_request():
                 user = User.query.filter_by(email=account_email).first_or_404()
             except Exception as e:
                 return render_template('404.html')
-            pass
+            from app.libs.email import send_mail
+            send_mail(form.email.data, '重置密码', 'email/reset_password.html', user=user, token='231234454')
+
     return render_template('auth/forget_password_request.html', form=form)
     pass
 
