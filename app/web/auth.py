@@ -61,6 +61,7 @@ def forget_password_request():
                       token=user.generate_token())
             flash('一封邮件已发送到邮箱' + account_email + '，请及时查收')
 
+
     return render_template('auth/forget_password_request.html', form=form)
     pass
 
